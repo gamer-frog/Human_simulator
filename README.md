@@ -17,3 +17,21 @@
 - 🌍 [Create with OMGithub](https://go.ondev.store/).
 - 🧬 [Explore the remix source](https://github.com/gamer-frog/Human_simulator).
 <!-- omgithub:readme:end -->
+
+## 🧬 HUMAN.SIM — simulador de vida
+
+Juego estático (sin build ni dependencias) en la raíz del repo:
+
+- `index.html`, `styles.css`, `game-data.js`, `game-events.js`, `game.js`
+- Se sirve con `python3 -m http.server 3002` y se abre en `http://localhost:3002`
+- Elegí nombre y origen, tomá decisiones año a año y llegá a los 90 con tu legado.
+
+## 🎛️ Conductor — Agent studio
+
+Importado desde `gamer-frog/PlayGround` dentro de `conductor/`:
+
+- App estática: `index.html`, `styles.css`, `app-*.js`
+- Datos y coordinación: `orchestra/` (`state.json`, `seed.json`, `events/`, `coord.py`)
+- Se sirve con `python3 -m http.server 3003 --directory conductor`
+- Manifiesto de importación: `conductor/IMPORT_MANIFEST.md`
+
