@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>HUMAN.SIM · Simulador de vida</title>
+  <meta name="description" content="Una vida, tus decisiones. Simulador de vida por turnos: estudiá, trabajá, amá, arriesgá y descubrí cómo termina tu historia." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b1020'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%235eead4'/%3E%3Cpath d='M14 56c2-14 9-20 18-20s16 6 18 20' fill='%235eead4'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+  <div class="orb orb-c" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="HUMAN.SIM, inicio">
+      <span class="brand-mark" aria-hidden="true">◉</span>
+      <span>HUMAN<span class="brand-dot">.</span>SIM</span>
+    </a>
+    <div class="topbar-right">
+      <span class="chip chip-ghost mono" id="version-chip">v1.0</span>
+      <button class="icon-btn" id="sound-btn" type="button" aria-label="Activar sonido" title="Sonido">🔇</button>
+      <button class="icon-btn hidden" id="reset-btn" type="button" aria-label="Empezar una vida nueva" title="Nueva vida">↻</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==================== START ==================== -->
+    <section class="screen start-screen" id="screen-start">
+      <div class="start-hero">
+        <p class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> Simulación humana en línea</p>
+        <h1>UNA VIDA.<br /><span class="grad">TUS DECISIONES.</span></h1>
+        <p class="lede">Nacés con lo que te tocó. Después, cada año es una elección: estudiar, trabajar, amar, arriesgar o descansar. No hay partida igual a otra.</p>
+
+        <div class="hero-stats">
+          <div><strong>90</strong><span>años posibles</span></div>
+          <div><strong>30+</strong><span>eventos de vida</span></div>
+          <div><strong>13</strong><span>logros por descubrir</span></div>
+        </div>
+
+        <div class="start-badges">
+          <span class="chip">🎮 Por turnos</span>
+          <span class="chip">📱 Mobile friendly</span>
+          <span class="chip">♾️ Rejugable</span>
+          <span class="chip">💾 Récord local</span>
+        </div>
+
+        <blockquote class="start-quote">
+          <span aria-hidden="true">“</span>La vida es lo que pasa mientras elegís qué hacer con el próximo año.<span aria-hidden="true">”</span>
+        </blockquote>
+      </div>
+
+      <div class="start-panel panel">
+        <div class="start-panel-head">
+          <p class="eyebrow">NUEVA SIMULACIÓN</p>
+          <h2>Creá una persona</h2>
+        </div>
+
+        <label class="field-label" for="name-input">Nombre</label>
+        <input id="name-input" class="text-input" type="text" maxlength="14" placeholder="Alex" autocomplete="off" spellcheck="false" />
+
+        <p class="field-label">Punto de partida</p>
+        <div class="origins" id="origins" role="radiogroup" aria-label="Punto de partida">
+          <button class="origin is-selected" type="button" data-origin="calle" role="radio" aria-checked="true">
+            <span class="origin-icon" aria-hidden="true">🏙️</span>
+            <span class="origin-copy">
+              <span class="origin-name">Barrio Unido</span>
+              <span class="origin-desc">Comunidad fuerte, bolsillo corto.</span>
+            </span>
+            <span class="origin-trait">+ Social · $150</span>
+          </button>
+          <button class="origin" type="button" data-origin="media" role="radio" aria-checked="false">
+            <span class="origin-icon" aria-hidden="true">🏡</span>
+            <span class="origin-copy">
+              <span class="origin-name">Clase Media</span>
+              <span class="origin-desc">Estabilidad, techo y libros.</span>
+            </span>
+            <span class="origin-trait">+ 10% ingresos · $1.200</span>
+          </button>
+          <button class="origin" type="button" data-origin="dorada" role="radio" aria-checked="false">
+            <span class="origin-icon" aria-hidden="true">🏛️</span>
+            <span class="origin-copy">
+              <span class="origin-name">Cuna Dorada</span>
+              <span class="origin-desc">Contactos, apellido y expectativas.</span>
+            </span>
+            <span class="origin-trait">+ 25% ingresos · $6.000</span>
+          </button>
+        </div>
+
+        <button class="btn-primary btn-start" id="start-btn" type="button" aria-label="Start">Comenzar vida <span aria-hidden="true">→</span></button>
+        <p class="fineprint">Sin instalar nada · ~50 decisiones · El progreso se guarda solo en tu navegador.</p>
+        <p class="best-record hidden" id="best-record"></p>
+      </div>
+    </section>
+
+    <!-- ==================== GAME ==================== -->
+    <section class="screen game-screen hidden" id="screen-game">
+      <div class="statusbar">
+        <div class="status-age">
+          <span class="label">EDAD</span>
+          <span class="age-big mono" id="age-big">0</span>
+          <span class="stage-pill" id="stage-pill">Infancia</span>
+        </div>
+        <div class="status-progress">
+          <div class="progress-head">
+            <span id="life-label">Nacimiento</span>
+            <span class="mono">90</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-label="Años vividos" aria-valuemin="0" aria-valuemax="90" aria-valuenow="0" id="life-progressbar">
+            <div class="progress-fill" id="life-progress"></div>
+          </div>
+        </div>
+        <div class="status-money">
+          <span class="label">PATRIMONIO</span>
+          <span class="money-big mono" id="money-big">$0</span>
+        </div>
+      </div>
+
+      <div class="game-grid">
+        <aside class="panel profile-panel">
+          <div class="avatar-row">
+            <div class="avatar-stage" id="avatar-stage">
+              <div class="mood-bubble" id="mood-bubble" aria-hidden="true">🙂</div>
+              <svg class="avatar" viewBox="0 0 220 300" role="img" aria-labelledby="avatar-title">
+                <title id="avatar-title">Retrato de tu personaje</title>
+                <ellipse cx="110" cy="285" rx="62" ry="10" fill="rgba(0,0,0,.38)" />
+                <g id="avatar-scale">
+                  <g id="avatar-posture">
+                    <rect class="pants" x="92" y="218" width="17" height="52" rx="8" />
+                    <rect class="pants" x="112" y="218" width="17" height="52" rx="8" />
+                    <rect class="shoe" x="84" y="262" width="28" height="13" rx="6" />
+                    <rect class="shoe" x="109" y="262" width="28" height="13" rx="6" />
+                    <rect class="arm" x="56" y="146" width="18" height="74" rx="9" />
+                    <rect class="arm" x="146" y="146" width="18" height="74" rx="9" />
+                    <circle class="skin" cx="65" cy="224" r="10" />
+                    <circle class="skin" cx="155" cy="224" r="10" />
+                    <path class="torso" d="M74 148c0-18 14-30 36-30s36 12 36 30v66c0 12-10 20-22 20H96c-12 0-22-8-22-20z" />
+                    <rect class="skin" x="100" y="120" width="20" height="24" rx="8" />
+                    <g id="head-group">
+                      <circle class="skin" cx="69" cy="94" r="9" />
+                      <circle class="skin" cx="151" cy="94" r="9" />
+                      <circle class="skin" cx="110" cy="92" r="43" />
+                      <g id="hair-full" class="hair">
+                        <path d="M67 92c-2-38 18-54 43-54s45 16 43 54c-8-13-22-20-43-20s-35 7-43 20z" />
+                        <path d="M70 78c8-18 22-26 40-26 16 0 29 6 38 20-12-6-24-9-38-9-16 0-30 5-40 15z" opacity=".55" />
+                      </g>
+                      <g id="hair-baby" class="hair hidden">
+                        <path d="M96 53c6-10 22-12 30-2 4 5 1 9-4 7-8-4-16-4-23 1-3 2-5-2-3-6z" />
+                      </g>
+                      <g id="hair-old" class="hair hidden">
+                        <path d="M68 86c0-8 2-16 6-22-2 12 0 22 6 28-6 5-12-1-12-6z" />
+                        <path d="M152 86c0-8-2-16-6-22 2 12 0 22-6 28 6 5 12-1 12-6z" />
+                        <path d="M88 56c10-8 32-8 44 0-10-2-32-2-44 0z" opacity=".7" />
+                      </g>
+                      <circle class="eye" cx="95" cy="90" r="4.6" />
+                      <circle class="eye" cx="125" cy="90" r="4.6" />
+                      <circle class="cheek" cx="82" cy="104" r="7" opacity=".35" />
+                      <circle class="cheek" cx="138" cy="104" r="7" opacity=".35" />
+                      <path id="mouth" class="mouth" d="M96 110 Q110 122 124 110" />
+                      <g id="glasses" class="glasses hidden">
+                        <rect x="84" y="81" width="23" height="18" rx="6" />
+                        <rect x="113" y="81" width="23" height="18" rx="6" />
+                        <path d="M107 90h6" />
+                      </g>
+                    </g>
+                    <path id="tie" class="tie hidden" d="M105 126h10l4 10-9 7-9-7z" />
+                    <path id="necklace" class="necklace hidden" d="M96 146q14 12 28 0" />
+                    <g id="cane" class="cane hidden">
+                      <path d="M164 196c0-12 14-12 14 0v78" />
+                    </g>
+                    <g id="badge" class="badge hidden">
+                      <circle cx="146" cy="170" r="13" />
+                      <path d="M140 170l4 4 8-9" />
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <div class="profile-id">
+              <p class="eyebrow" id="profile-origin">Barrio Unido</p>
+              <h2 id="profile-name">Alex</h2>
+              <p class="profile-job" id="profile-job">Estudiante</p>
+              <div class="life-chips" id="life-chips"></div>
+            </div>
+          </div>
+
+          <div class="stat-list" id="stat-list"></div>
+
+          <div class="energy-block">
+            <div class="energy-head">
+              <span>⚡ Energía</span>
+              <span class="mono" id="energy-val">80</span>
+            </div>
+            <div class="energy-track"><div class="energy-fill" id="energy-fill"></div></div>
+            <button class="rest-btn" id="rest-btn" type="button" aria-label="Descansar y avanzar un año">
+              😴 Descansar <span class="rest-gain">+30⚡ +3❤️</span>
+            </button>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-cell">
+              <span>Carrera</span>
+              <strong id="career-txt">Sin empleo</strong>
+            </div>
+            <div class="mini-cell">
+              <span>Amor</span>
+              <strong id="love-txt">—</strong>
+            </div>
+          </div>
+        </aside>
+
+        <section class="panel choice-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">TURNO <span id="turn-num" class="mono">1</span></p>
+              <h3 id="choice-title">¿Qué hace Alex este año?</h3>
+            </div>
+            <span class="chip chip-mint" id="years-chip">+1 año</span>
+          </div>
+          <div class="actions" id="actions"></div>
+          <div class="stage-note">
+            <span class="stage-note-icon" id="stage-note-icon" aria-hidden="true">🧸</span>
+            <div>
+              <strong id="stage-note-title">Infancia</strong>
+              <p id="stage-note-text">La infancia define las bases: mente, salud y vínculos.</p>
+            </div>
+          </div>
+          <p class="kbd-hint">Tip: <kbd>1</kbd>–<kbd>4</kbd> para elegir. Los <strong>eventos</strong> pueden cambiarlo todo.</p>
+        </section>
+
+        <aside class="side-col">
+          <div class="panel goals-panel">
+            <div class="panel-head small">
+              <h3>Metas de vida</h3>
+              <span class="chip" id="goals-count">0/4</span>
+            </div>
+            <ul class="goals-list" id="goals-list"></ul>
+          </div>
+          <div class="panel log-panel">
+            <div class="panel-head small">
+              <h3>Diario de vida</h3>
+              <span class="chip chip-ghost">📖</span>
+            </div>
+            <div class="log" id="log" aria-live="polite"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== EVENT MODAL ==================== -->
+  <div class="modal hidden" id="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-title" aria-describedby="event-text">
+    <div class="modal-card">
+      <div class="event-icon" id="event-icon" aria-hidden="true">🎲</div>
+      <p class="eyebrow" id="event-kicker">EVENTO DE VIDA</p>
+      <h2 id="event-title">Evento</h2>
+      <p class="event-text" id="event-text"></p>
+      <div class="event-choices" id="event-choices"></div>
+      <div class="event-result hidden" id="event-result">
+        <p id="event-result-text"></p>
+        <button class="btn-primary" id="event-continue" type="button">Continuar <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== END SCREEN ==================== -->
+  <section class="screen end-screen hidden" id="end-screen">
+    <div class="end-card panel">
+      <p class="eyebrow" id="end-kicker">SIMULACIÓN COMPLETA</p>
+      <h2 id="end-title">La vida de Alex</h2>
+      <p class="end-dates mono" id="end-dates">0 — 84 años</p>
+      <p class="epitaph" id="end-epitaph"></p>
+
+      <div class="score-wrap">
+        <div class="score-ring" id="score-ring">
+          <div class="score-inner">
+            <span class="mono" id="end-score">0</span>
+            <span class="score-label">PUNTOS DE LEGADO</span>
+          </div>
+        </div>
+        <div class="rank-block">
+          <span class="rank-icon" id="end-rank-icon">🌱</span>
+          <span class="rank-name" id="end-rank">Vida sencilla</span>
+          <span class="rank-sub" id="end-summary">Una vida como cualquier otra.</span>
+        </div>
+      </div>
+
+      <div class="end-stats" id="end-stats"></div>
+
+      <div class="end-extras" id="end-extras"></div>
+
+      <div class="end-ach-head">
+        <h3>Logros</h3>
+        <span class="chip" id="end-ach-count">0/13</span>
+      </div>
+      <div class="end-achievements" id="end-achievements"></div>
+
+      <div class="end-actions">
+        <button class="btn-primary" id="again-btn" type="button">Comenzar otra vida <span aria-hidden="true">↻</span></button>
+        <button class="btn-ghost" id="share-btn" type="button">Compartir historia</button>
+      </div>
+      <p class="fineprint" id="end-best"></p>
+    </div>
+  </section>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="game-data.js"></script>
+  <script src="game-events.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
