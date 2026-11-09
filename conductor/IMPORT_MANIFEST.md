@@ -88,11 +88,25 @@ git diff --stat origen/agentes-ia-estudio-plan..origen/opencode-checkpoints/<N>
 - `orchestra/state.json`: **HTTP 200** (`curl -o /dev/null -w '%{http_code}'` → `200`)
 - Consola: **0 errores, 0 warnings**. Hay 1 mensaje `[VERBOSE]` de Chrome sobre
   formularios anidados; el prompt indica que los `[VERBOSE]` no cuentan.
-- Captura: `screenshots/conductor.jpg` (viewport 1280×900)
+- Captura: `screenshots/conductor-final.jpg` (viewport 1280×900)
 - Dato del snapshot (no bloqueante): la barra lateral muestra “Sin repositorios”
-  y una tarjeta de loops muestra `undefined activos`. La app carga y navega bien;
-  es un desajuste entre el `state.json` del snapshot y lo que espera la UI.
-  Se documenta tal cual, sin inventar datos.
+  en las divisiones que el snapshot no tiene pobladas, y una tarjeta de loops
+  muestra `undefined activos`. La app carga y navega bien; es un desajuste entre
+  el `state.json` del snapshot y lo que espera la UI. Se documenta tal cual, sin
+  inventar datos.
+
+### 3.1 Corrección post-importación
+
+La branch consolidada traía `app-core.js` renderizando la barra lateral por
+división/cliente/repo, pero su `styles.css` había perdido el bloque de estilos
+de esos elementos (`.sidebar-scope`, `.division-title`, `.client-name`,
+`.client-repo`, `.sidebar-project`, `.division-empty`). Sin esos estilos los
+títulos se veían como barras grises sin texto.
+
+Se reconstruyó el bloque **leyendo y adaptando** el CSS del checkpoint 21
+(`conductor/checkpoints/21/styles.css`), sin merge ciego, y se agregó scroll
+controlado al `#projectNav` para que la barra no desborde el viewport. Verificado
+de nuevo en navegador: 5 vistas, 0 errores de consola, captura actualizada.
 
 ## 4. Archivos del origen deliberadamente NO copiados
 
