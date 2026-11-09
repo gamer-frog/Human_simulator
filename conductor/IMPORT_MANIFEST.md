@@ -1,11 +1,20 @@
 # Manifiesto de importación — Conductor / Agent studio
 
 **Fecha:** 2026-11-09
-**Repo destino:** `gamer-frog/Human_simulator` (checkout de trabajo `opencode/42555119990`)
+**Repo destino:** `gamer-frog/Human_simulator`
+**Branch destino:** `main` (commit `117b523`) y branch de revisión `conductor/import`
 **Ubicación:** `conductor/` (subcarpeta, porque la raíz ya tiene el juego HUMAN.SIM)
 **Repo origen:** `https://github.com/gamer-frog/PlayGround` (sólo lectura; no se modificó)
 **Branch canónica:** `origen/agentes-ia-estudio-plan` @ `bad4938`
 **Checkpoint más nuevo revisado:** `origen/opencode-checkpoints/24` @ `95a0a3c`
+
+## 0. Destino
+
+- `main` @ `117b523` (push fast-forward desde `32e4865`, sin force)
+- Branch de revisión: `conductor/import` @ `117b523`
+- Hito del juego: tag `humansim-save-001` @ `cd35dd1`
+  (no se usó `save-001` porque ese tag ya existía en el remoto origen y se
+  respetó sin sobreescribirlo)
 
 ## 1. Manifiesto de archivos copiados
 
